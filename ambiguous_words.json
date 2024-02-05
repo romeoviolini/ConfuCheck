@@ -1,0 +1,20 @@
+[
+    {
+        "Id": 0,
+        "Word": "accept",
+        "Meaning": "to receive",
+        "Type": 1,
+        "Ambiguities": [
+            1
+        ]
+    },
+    {
+        "Id": 1,
+        "Word": "except",
+        "Meaning": "to take or leave out",
+        "Type": 1,
+        "Ambiguities": [
+            0
+        ]
+    }
+]
