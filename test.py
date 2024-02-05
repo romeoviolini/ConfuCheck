@@ -8,4 +8,4 @@ ambiguous_words = load_ambiguous_words_from_json(json_file_path)
 
 # Print the list to verify
 for word in ambiguous_words:
-    print(word)
+    print(word.Word)
