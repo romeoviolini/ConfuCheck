@@ -2,7 +2,7 @@
     {
         "Id": 0,
         "Word": "accept",
-        "Meaning": "to receive",
+        "Meaning": "to receive.\ne.g. He accepts defeat well.",
         "Type": 1,
         "Ambiguities": [
             1
@@ -11,7 +11,7 @@
     {
         "Id": 1,
         "Word": "except",
-        "Meaning": "to take or leave out",
+        "Meaning": "to take or leave out.\ne.g. Lack of sleep affects the quality of your work.",
         "Type": 1,
         "Ambiguities": [
             0
