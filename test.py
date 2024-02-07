@@ -21,7 +21,7 @@ results = find_ambiguous_words(text, ambiguous_words, nlp)
 
 for result in results:
     print(
-        f"Parola trovata: {result[0]}\n Posizione: {result[1]}\nId parola ambigua di riferimento: {result[2]}")
+        f"Word found: {result[0]}\nPosition: {result[1]}\nAmbiguous word Id: {result[2]}")
 
 
 
