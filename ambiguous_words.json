@@ -11,8 +11,8 @@
     {
         "Id": 1,
         "Word": "except",
-        "Meaning": "to take or leave out.\ne.g. Lack of sleep affects the quality of your work.",
-        "Type": 1,
+        "Meaning": "to take or leave out.\ne.g. e.g. Please take all the books off the shelf except for the red one.",
+        "Type": 2,
         "Ambiguities": [
             0
         ]
