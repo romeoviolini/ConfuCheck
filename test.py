@@ -31,13 +31,13 @@ offset_accumulator = 0
 for result in results:
         word, position, word_id = result
 
-        # Aggiorna la posizione della parola corrente con l'offset accumulato fino a questo momento
+        # Update the current word's position with the accumulated offset so far
         current_position = position + offset_accumulator
 
-        # Sostituisce la parola e calcola l'offset
+        # Replace the word and calculate the offset
         text, offset = replace_word_and_calculate_offset(text, current_position, word, "TEST")
 
-        # Aggiorna l'accumulatore di offset con il nuovo offset
+        # Update the offset accumulator
         offset_accumulator += offset
 
 print(text)
