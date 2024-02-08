@@ -27,16 +27,36 @@ class AmbiguousWord:
     It is designed to be a part of a larger system that helps in identifying and resolving ambiguities in technical writing.
     """
 
-    def __init__(self, Id: int, Word: str, Meaning: str, Type: int, Ambiguities: List[int]):
+    def __init__(self, Id: int, Word: str, Meaning: str, Type: int, Ambiguities: List[int], Variants: List[str] = None):
         self.Id = Id  # Unique identifier for the word
         self.Word = Word  # The ambiguous word itself
         self.Meaning = Meaning  # A possible meaning of the word
         self.Type = Type  # Type of the word (0 = noun, 1 = verb, 2 = other)
         self.Ambiguities = Ambiguities  # List of IDs of ambiguous words related to this one
+        self.Variants = Variants if Variants is not None else []  # List of possible variants of the ambiguous word
+        self._related_words_cache = None  # Initialize the cache as None
 
     def __repr__(self):
         return (f"AmbiguousWord(Id={self.Id}, Word='{self.Word}', Meaning='{self.Meaning}', Type={self.Type}, "
-                f"Ambiguities={self.Ambiguities})")
+                f"Ambiguities={self.Ambiguities})", f"Variants={self.Variants})")
+
+    def find_related_ambiguities(self, words: List['AmbiguousWord']) -> List['AmbiguousWord']:
+        """
+        Finds and returns a list of AmbiguousWord instances that are related to this word,
+        based on the IDs in this word's Ambiguities property. The result is cached to avoid
+        recomputation on subsequent calls.
+
+        :param words: A list of AmbiguousWord instances to search through for related words.
+        :return: A list of AmbiguousWord instances that are related to this instance.
+        """
+        # Check if we've already computed this before
+        if self._related_words_cache is not None:
+            return self._related_words_cache
+
+        # Compute the related words and cache the result
+        self._related_words_cache = [word for word in words if word.Id in self.Ambiguities]
+
+        return self._related_words_cache
 
 
 def load_ambiguous_words_from_json(file_path: str) -> List[AmbiguousWord]:
