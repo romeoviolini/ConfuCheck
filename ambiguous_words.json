@@ -6,7 +6,8 @@
         "Type": 1,
         "Ambiguities": [
             1
-        ]
+        ],
+        "Variants": ["accept", "accepts", "accepted"]
     },
     {
         "Id": 1,
