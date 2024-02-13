@@ -1,0 +1,105 @@
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
+    QMessageBox, QScrollArea, QLabel
+from PyQt5.QtCore import Qt
+from settings import WINDOW_WIDTH, WINDOW_HEIGHT, MAX_CHARACTERS, ALLOWED_FORMATS
+from UI.plain_text_edit import PlainTextOnlyEdit
+from docx import Document
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.textEdit = None
+        self.uploadButton = None
+        self.setWindowTitle("Text Input Window")
+        self.initUI()
+        self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Increase the window size
+
+    def initUI(self):
+        # Create layout and widget as before
+        layout = QVBoxLayout()
+        contentWidget = QWidget()  # This widget contains everything you want to be scrollable
+        contentWidget.setLayout(layout)
+
+        # Scroll Area setup as before
+        scrollArea = QScrollArea()
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setWidget(contentWidget)
+        self.setCentralWidget(scrollArea)
+
+        # Text edit area setup as before
+        self.textEdit = PlainTextOnlyEdit()
+        self.textEdit.setPlaceholderText("Copy and paste your text here...")
+        layout.addWidget(self.textEdit)
+
+        # Button to confirm pasted text setup as before
+        self.confirmButton = QPushButton("Confirm Text")
+        self.confirmButton.setEnabled(False)
+        layout.addWidget(self.confirmButton)
+
+        # Label indicating an alternative action
+        separatorLabel = QLabel("--- or ---", self)
+        separatorLabel.setAlignment(Qt.AlignCenter)  # Center-align the text
+        layout.addWidget(separatorLabel)
+
+        # Button to upload a file setup as before
+        self.uploadButton = QPushButton("Upload Text File")
+        layout.addWidget(self.uploadButton)
+
+        # Signals setup as before
+        self.textEdit.textChanged.connect(self.onTextChanged)
+        self.confirmButton.clicked.connect(self.onConfirmText)
+        self.uploadButton.clicked.connect(self.onUploadFile)
+
+    def onTextChanged(self):
+        """Check if the pasted text exceeds the maximum number of characters allowed."""
+        text = self.textEdit.toPlainText()
+        if len(text) > MAX_CHARACTERS:
+            QMessageBox.warning(self, "Error", f"The text exceeds the maximum limit of {MAX_CHARACTERS} characters.")
+            self.textEdit.clear()  # Clear the text or set it to a previous valid state
+        else:
+            self.confirmButton.setEnabled(bool(text))
+
+    def onConfirmText(self):
+        """Handle text confirmation."""
+        text = self.textEdit.toPlainText()
+        print("Text confirmed:", text)
+        # Here, proceed with processing the confirmed text
+
+    def onUploadFile(self):
+        """Open a file dialog to select a file, check if its format is allowed, and read text accordingly."""
+        filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
+        if filename:
+            file_extension = filename.split('.')[-1].lower()
+            if not file_extension or f".{file_extension}" not in ALLOWED_FORMATS:
+                QMessageBox.warning(self, "Error",
+                                    f"The file format is not valid. Allowed formats: {', '.join(ALLOWED_FORMATS)}")
+            else:
+                if file_extension == "docx":
+                    # Use python-docx to extract text from .docx files
+                    try:
+                        doc = Document(filename)
+                        self.currentText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+                    except Exception as e:
+                        QMessageBox.warning(self, "Error", "Failed to read .docx file.")
+                        print(e)
+                        return
+                else:
+                    # Handle other file types as before
+                    try:
+                        with open(filename, 'r') as file:
+                            self.currentText = file.read()
+                    except UnicodeDecodeError as e:
+                        QMessageBox.warning(self, "Error",
+                                            "Failed to decode the file. It might not be a plain text file.")
+                        print(e)
+                        return
+
+                if len(self.currentText) > MAX_CHARACTERS:
+                    QMessageBox.warning(self, "Error",
+                                        f"The file's text exceeds the maximum limit of {MAX_CHARACTERS} characters.")
+                    self.currentText = ""  # Clear the text due to error
+                else:
+                    self.textEdit.setText(self.currentText)  # Display the text
+                    print("File uploaded and text saved for analysis.")
+
