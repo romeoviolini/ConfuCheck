@@ -52,6 +52,6 @@ ambiguities = ambiguous_words[0].find_related_ambiguities(ambiguous_words)
 print(ambiguities[0].Word)
 
 app = QApplication(sys.argv)
-window = MainWindow()
+window = MainWindow(nlp, ambiguous_words)
 window.show()
 sys.exit(app.exec_())

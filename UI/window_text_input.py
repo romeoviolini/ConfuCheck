@@ -1,19 +1,26 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
     QMessageBox, QScrollArea, QLabel
 from PyQt5.QtCore import Qt
+
+from UI.window_text_interaction import DocumentWindow
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, MAX_CHARACTERS, ALLOWED_FORMATS
 from UI.plain_text_edit import PlainTextOnlyEdit
 from docx import Document
 
+from text_analyzer import find_ambiguous_words
+
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, nlp, ambiguousWords):
         super().__init__()
+        self.nlp = nlp
+        self.ambiguousWords = ambiguousWords
         self.textEdit = None
         self.uploadButton = None
         self.setWindowTitle("Text Input Window")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Increase the window size
+        self.showFullScreen()
 
     def initUI(self):
         # Create layout and widget as before
@@ -64,7 +71,14 @@ class MainWindow(QMainWindow):
         """Handle text confirmation."""
         text = self.textEdit.toPlainText()
         print("Text confirmed:", text)
+
+        results = find_ambiguous_words(text, self.ambiguousWords, self.nlp)
+
         # Here, proceed with processing the confirmed text
+        self.documentWindow = DocumentWindow(text, results)
+        self.documentWindow.previousWindow = self
+        self.documentWindow.show()
+        self.close()
 
     def onUploadFile(self):
         """Open a file dialog to select a file, check if its format is allowed, and read text accordingly."""
