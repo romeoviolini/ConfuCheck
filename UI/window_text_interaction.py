@@ -93,12 +93,14 @@ class DocumentWindow(QWidget):
     def highlight_words_in_html(self, text, ambiguous_words_results):
         highlighted_text = text
         offset = 0
-        for word, position, _ in ambiguous_words_results:
-            start_tag = '<span style="background-color: yellow;">' if ambiguous_words_results.index(
-                (word, position, _)) != 0 else '<span style="background-color: blue;">'
+        for index, (word, position, _) in enumerate(ambiguous_words_results):
+            # Use underline for styling, and differentiate the first selected word with a different color
+            #color = "#008000" good for corrected words
+            color = "#FFA500" if index == 0 else "#808080"  # Change 'blue' to any color for the first word, and 'black' for others
+            start_tag = f'<span style="text-decoration: underline; color: {color};">'
             end_tag = '</span>'
-            highlighted_text = highlighted_text[:position + offset] + start_tag + word + end_tag + highlighted_text[
-                                                                                                   position + offset + len(
-                                                                                                       word):]
+            highlighted_text = (highlighted_text[:position + offset] + start_tag + word + end_tag +
+                                highlighted_text[position + offset + len(word):])
             offset += len(start_tag) + len(end_tag)
         return highlighted_text
+

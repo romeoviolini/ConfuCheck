@@ -6,14 +6,14 @@ FONT_SIZE = 14
 
 
 def formatTextAsHTML(text):
-    font_stack = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', sans-serif"
+    #font_stack = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', sans-serif"
+    font_stack = "'Times New Roman', Times, serif"
     text = text.replace('\n', '<br>')
     return f"""
     <html>
     <head>
         <style>
-            body {{ font-family: {font_stack}; margin: 20px; font-size: {FONT_SIZE}px; }}
-            p {{ text-indent: 20px; }}
+           
         </style>
     </head>
     <body>
