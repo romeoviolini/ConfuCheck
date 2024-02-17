@@ -1,11 +1,12 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication)
 from PyQt5.QtCore import Qt
-from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML
-
+from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 class DocumentWindow(QWidget):
     def __init__(self, text, ambiguous_words_results, parent=None, previousWindow=None):
         super().__init__(parent)
+        self.currentIndex = 0
         self.sourceText = text
         self.ambiguousWordsResults = ambiguous_words_results
         self.previousWindow = previousWindow
@@ -33,9 +34,8 @@ class DocumentWindow(QWidget):
         contentArea = QHBoxLayout()
 
         # Document Visualization
-        self.textEdit = QTextEdit()
-        self.textEdit.setReadOnly(True)
-        self.textEdit.setHtml(text)
+        self.webView = QWebEngineView()  # Use QWebEngineView instead of QTextEdit
+        self.webView.setHtml(text)  # Load the HTML content
 
         # Side Panel
         sidePanel = QVBoxLayout()
@@ -43,7 +43,7 @@ class DocumentWindow(QWidget):
         sidePanel.addWidget(optionLabel)
 
         # Adding widgets to the content area with stretch factors
-        contentArea.addWidget(self.textEdit, 2)  # Document takes 2/3 of the space
+        contentArea.addWidget(self.webView, 2)  # Document takes 2/3 of the space
         contentArea.addLayout(sidePanel, 1)  # Side panel takes 1/3 of the space
 
         mainLayout.addLayout(contentArea)
@@ -75,6 +75,8 @@ class DocumentWindow(QWidget):
 
         self.setLayout(mainLayout)
 
+        self.webView.loadFinished.connect(self.onLoadFinished)
+
     def goBack(self):
         # Close the current window and show the previous one if it exists
         if self.previousWindow:
@@ -88,6 +90,7 @@ class DocumentWindow(QWidget):
     def onNextClicked(self):
         # Placeholder for next button functionality
         print("Next button clicked")
+        self.selectNextAmbigousWordByIndex(self.currentIndex+1)
 
     # Example function to highlight words in HTML
     def highlight_words_in_html(self, text, ambiguous_words_results):
@@ -96,11 +99,76 @@ class DocumentWindow(QWidget):
         for index, (word, position, _) in enumerate(ambiguous_words_results):
             # Use underline for styling, and differentiate the first selected word with a different color
             #color = "#008000" good for corrected words
-            color = "#FFA500" if index == 0 else "#808080"  # Change 'blue' to any color for the first word, and 'black' for others
-            start_tag = f'<span style="text-decoration: underline; color: {color};">'
+            color = SELECTED_COLOR if index == 0 else UNSELECTED_COLOR  # Change 'blue' to any color for the first word, and 'black' for others
+            start_tag = (f'<span id={position} style="text-decoration: underline; color: {color}; background-color: '
+                         f'{BACKGROUND_COLOR};">')
             end_tag = '</span>'
             highlighted_text = (highlighted_text[:position + offset] + start_tag + word + end_tag +
                                 highlighted_text[position + offset + len(word):])
             offset += len(start_tag) + len(end_tag)
         return highlighted_text
 
+    def getWordPositionByIndex(self, index):
+        return self.ambiguousWordsResults[index][1]
+
+    def change_word_color(self, span_id, color, bold):
+        fontWeight = "bold" if bold else "normal"
+        script = f"""
+        var element = document.getElementById('{span_id}');
+        if (element) {{
+            element.style.color = '{color}';
+            element.style.fontWeight = '{fontWeight}';
+        }}
+        """
+        self.webView.page().runJavaScript(script)
+
+    def scroll_to_word_on_top(self, span_id):
+        script = f"""
+        var element = document.getElementById('{span_id}');
+        if (element) {{
+            element.scrollIntoView();
+        }}
+        """
+        self.webView.page().runJavaScript(script)
+
+    def scroll_to_word(self, span_id):
+        script = f"""
+        var element = document.getElementById('{span_id}');
+        if (element) {{
+            var bounding = element.getBoundingClientRect();
+            if (
+                bounding.top >= 0 && bounding.left >= 0 &&
+                bounding.right <= (window.innerWidth || document.documentElement.clientWidth) &&
+                bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+            ) {{
+                // The element is in the view, don't scroll
+            }} else {{
+                // The element is not in the view, scroll to the element
+                element.scrollIntoView({{behavior: "smooth", block: "nearest", inline: "start"}});
+            }}
+        }}
+        """
+        self.webView.page().runJavaScript(script)
+
+    def onLoadFinished(self, success):
+        if success:
+            if len(self.ambiguousWordsResults) > 0:
+                firstAmbiguousPosition = self.getWordPositionByIndex(self.currentIndex)
+                print(f"scroll to {firstAmbiguousPosition}")
+                self.scroll_to_word_on_top(firstAmbiguousPosition)
+                self.change_word_color(firstAmbiguousPosition, SELECTED_COLOR, True)
+
+    def selectNextAmbigousWordByIndex(self, nextIndex):
+        position = self.ambiguousWordsResults[self.currentIndex][1]
+        self.change_word_color(position, UNSELECTED_COLOR, False)
+        self.currentIndex = nextIndex
+        self.currentIndex = self.currentIndex % len(self.ambiguousWordsResults)
+        position = self.ambiguousWordsResults[self.currentIndex][1]
+        self.change_word_color(position, SELECTED_COLOR, True)
+        self.scroll_to_word(position)
+
+    def selectNextAmbiguousWordByPosition(self, position):
+        for index, (_, start, _) in enumerate(self.ambiguousWordsResults):
+            if start == position:
+                return index
+        return None
