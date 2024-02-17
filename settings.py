@@ -15,7 +15,9 @@ def formatTextAsHTML(text):
     <html>
     <head>
         <style>
-           
+            body {{
+                font-family: {font_stack};
+            }}
         </style>
     </head>
     <body>
