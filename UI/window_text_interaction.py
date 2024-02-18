@@ -1,6 +1,7 @@
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication,
-                             QTreeWidget, QTreeWidgetItem, QScrollArea)
-from PyQt5.QtCore import Qt
+                             QTreeWidget, QTreeWidgetItem, QScrollArea, QFileDialog, QMessageBox)
+from PyQt5.QtCore import Qt, QTimer
 from data_model import AmbiguousWord, find_ambiguous_word_by_id
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -32,10 +33,17 @@ class DocumentWindow(QWidget):
 
         # Navigation Panel
         navigationPanel = QHBoxLayout()
-        backButton = QPushButton("New Text")
-        navigationPanel.addWidget(backButton)
+        newTextButton = QPushButton("New Text")
+        copyTextButton = QPushButton("Copy Text")  # New button for copying text
+        exportTextButton = QPushButton("Export Text")
+        navigationPanel.addWidget(newTextButton)
+        navigationPanel.addWidget(copyTextButton)  # Add the Copy Text button
+        navigationPanel.addWidget(exportTextButton)
+
         navigationPanel.addStretch()
-        backButton.clicked.connect(self.goBack)
+        newTextButton.clicked.connect(self.newText)
+        copyTextButton.clicked.connect(self.copyText)  # Connect to copyText slot
+        exportTextButton.clicked.connect(self.exportText)
 
         mainLayout.addLayout(navigationPanel)
 
@@ -92,21 +100,56 @@ class DocumentWindow(QWidget):
 
         self.webView.loadFinished.connect(self.onLoadFinished)
 
-    def goBack(self):
+    def newText(self):
         # Close the current window and show the previous one if it exists
         if self.previousWindow:
             self.previousWindow.show()
         self.close()
 
+    def copyText(self):
+        # Placeholder for the copy text functionality
+        text = self.prepareSourceTextForExport()
+        # You might want to use QApplication.clipboard().setText(self.sourceText)
+        QApplication.clipboard().setText(text)
+        print("Text copied to clipboard")
+        QMessageBox.information(self, "Text Copied",
+                                f"The text has been copied to the clipboard.")
+
+
+    def exportText(self):
+        # Placeholder for the export text functionality
+        text = self.prepareSourceTextForExport()
+        # This might involve saving self.sourceText to a file
+        # Open a file dialog to let the user choose the file name and location to save
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self, "Export Text", "textChecked.txt",
+                                                  "Text Files (*.txt)", options=options)
+
+        if fileName:
+            # Ensure the fileName has a .txt extension if not provided
+            if not fileName.endswith('.txt'):
+                fileName += '.txt'
+
+            # Write self.sourceText to the chosen file
+            try:
+                with open(fileName, "w", encoding="utf-8") as file:
+                    file.write(text)
+                QMessageBox.information(self, "Export Successful",
+                                        f"File has been successfully exported to:\n{fileName}")
+            except Exception as e:
+                QMessageBox.warning(self, "Export Failed", f"Failed to export file:\n{e}")
+
     def onBackClicked(self):
         # Placeholder for back button functionality
         print("Back button clicked")
-        self.prepareSourceTextForExport()
+        self.selectNextAmbigousWordByIndex(self.currentIndex - 1)
+
 
     def onNextClicked(self):
         # Placeholder for next button functionality
         print("Next button clicked")
-        self.selectNextAmbigousWordByIndex(self.currentIndex+1)
+        self.selectNextAmbigousWordByIndex(self.currentIndex + 1)
 
     # Example function to highlight words in HTML
     def highlight_words_in_html(self, text, ambiguous_words_results):
@@ -334,11 +377,7 @@ class DocumentWindow(QWidget):
 
                 # Replace the word and calculate the offset
                 text, offset = replace_word_and_calculate_offset(text, current_position, result[0], correctWord)
-
                 # Update the offset accumulator
                 offset_accumulator += offset
 
-        print(text)
-
-
-
+        return text
