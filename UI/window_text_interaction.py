@@ -431,13 +431,13 @@ class DocumentWindow(QWidget):
             self.onItemClicked(self.treeItems[self.currentOptionArrayIndex - 1][0], 0)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Left:
+        if event.key() == Qt.Key_A:
             self.onBackClicked()
-        elif event.key() == Qt.Key_Right:
+        elif event.key() == Qt.Key_D:
             self.onNextClicked()
-        elif event.key() == Qt.Key_Down:
+        elif event.key() == Qt.Key_S:
             self.nextOptionSelected()
-        elif event.key() == Qt.Key_Up:
+        elif event.key() == Qt.Key_W:
             self.previousOptionSelected()
         elif event.key() == Qt.Key_S and (event.modifiers() & Qt.ControlModifier):
             self.exportText()
