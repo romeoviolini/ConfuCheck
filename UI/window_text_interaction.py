@@ -20,6 +20,7 @@ class DocumentWindow(QWidget):
         self.previousWindow = previousWindow
         # List to keep track of all tree items
         self.treeItems = []
+        self.currentOptionArrayIndex = -1
         self.setWindowTitle("Document View")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Optionally resize the window
@@ -107,10 +108,16 @@ class DocumentWindow(QWidget):
         self.webView.loadFinished.connect(self.onLoadFinished)
 
     def newText(self):
+        reply = QMessageBox.question(self, 'Confirm New Text',
+                                     'Are you sure you want to open a new text? Unsaved progress will be lost.',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         # Close the current window and show the previous one if it exists
-        if self.previousWindow:
-            self.previousWindow.show()
-        self.close()
+        if reply == QMessageBox.Yes:
+            if self.previousWindow:
+                self.previousWindow.show()
+            self.close()
+        else:
+            pass
 
     def copyText(self):
         # Placeholder for the copy text functionality
@@ -147,12 +154,16 @@ class DocumentWindow(QWidget):
                 QMessageBox.warning(self, "Export Failed", f"Failed to export file:\n{e}")
 
     def onBackClicked(self):
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            return
         # Placeholder for back button functionality
         print("Back button clicked")
         self.selectNextAmbigousWordByIndex(self.currentIndex - 1)
 
 
     def onNextClicked(self):
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            return
         # Placeholder for next button functionality
         print("Next button clicked")
         self.selectNextAmbigousWordByIndex(self.currentIndex + 1)
@@ -296,12 +307,13 @@ class DocumentWindow(QWidget):
 
     def onItemClicked(self, item, column):
         # Deselect all items except the one clicked
-        for treeItem in self.treeItems:
+        for index, treeItem in enumerate(self.treeItems):
             if treeItem[0] != item:
                 # Deselect item. There's no direct deselect method, but you can simulate it by:
                 treeItem[0].setSelected(False)
             else:
                 # Ensure the clicked item is selected
+                self.currentOptionArrayIndex = index
                 treeItem[0].setSelected(True)
                 print(f"{treeItem[0].text(column)} option: {treeItem[1]} position: {treeItem[2]}")
                 # results.append((match.group(), start, word.Id, False, -1, -1))
@@ -387,3 +399,45 @@ class DocumentWindow(QWidget):
                 offset_accumulator += offset
 
         return text
+
+    def nextOptionSelected(self):
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            return
+        currentResult = self.ambiguousWordsResults[self.currentIndex]
+        option = currentResult[4]
+        subOption = currentResult[5]
+
+        if option == -1 and subOption == -1:
+           self.onItemClicked(self.treeItems[0][0],0)
+        elif self.currentOptionArrayIndex + 1 < len(self.treeItems):
+            self.onItemClicked(self.treeItems[self.currentOptionArrayIndex + 1][0], 0)
+
+    def previousOptionSelected(self):
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            return
+        currentResult = self.ambiguousWordsResults[self.currentIndex]
+        option = currentResult[4]
+        subOption = currentResult[5]
+
+        if option == -1 and subOption == -1:
+           self.onItemClicked(self.treeItems[len(self.treeItems)-1][0],0)
+        elif self.currentOptionArrayIndex - 1 >= 0:
+            self.onItemClicked(self.treeItems[self.currentOptionArrayIndex - 1][0], 0)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Left:
+            self.onBackClicked()
+        elif event.key() == Qt.Key_Right:
+            self.onNextClicked()
+        elif event.key() == Qt.Key_Down:
+            self.nextOptionSelected()
+        elif event.key() == Qt.Key_Up:
+            self.previousOptionSelected()
+        elif event.key() == Qt.Key_S and (event.modifiers() & Qt.ControlModifier):
+            self.exportText()
+        elif event.key() == Qt.Key_C and (event.modifiers() & Qt.ControlModifier):
+            self.copyText()
+        elif event.key() == Qt.Key_N and (event.modifiers() & Qt.ControlModifier):
+            self.newText()
+        else:
+            super().keyPressEvent(event)  # Call the base class method to handle other key presses
