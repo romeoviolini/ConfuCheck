@@ -86,6 +86,12 @@ class DocumentWindow(QWidget):
         nextButton = QPushButton("Next Word")
         nextButton.clicked.connect(self.onNextClicked)  # Implement onNextClicked method
 
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            backButton.setEnabled(False)
+            nextButton.setEnabled(False)
+            optionLabel = QLabel("The text looks clean.")
+            self.sidePanel.addWidget(optionLabel)
+
         # Add widgets to the bottom navigation panel
         bottomNavPanel.addWidget(backButton)
         bottomNavPanel.addStretch()  # This adds a stretchable space, centering the label
