@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Text Input Window")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Increase the window size
-        self.showFullScreen()
+        #self.showFullScreen()
 
     def initUI(self):
         # Create layout and widget as before
