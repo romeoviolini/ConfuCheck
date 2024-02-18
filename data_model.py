@@ -71,3 +71,6 @@ def save_ambiguous_words_to_json(file_path: str, ambiguous_words: List[Ambiguous
     with open(file_path, 'w', encoding='utf-8') as file:
         json_data = [word.__dict__ for word in ambiguous_words]
         json.dump(json_data, file, indent=4)
+
+def find_ambiguous_word_by_id(words, id):
+    return next((word for word in words if word.Id == id), None)
