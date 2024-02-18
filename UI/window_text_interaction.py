@@ -1,15 +1,21 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication,
+                             QTreeWidget, QTreeWidgetItem, QScrollArea)
 from PyQt5.QtCore import Qt
+from data_model import AmbiguousWord
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from typing import List
 
 class DocumentWindow(QWidget):
-    def __init__(self, text, ambiguous_words_results, parent=None, previousWindow=None):
+    def __init__(self, text, ambiguous_words_results, ambiguousWords: List[AmbiguousWord] , parent=None, previousWindow=None):
         super().__init__(parent)
         self.currentIndex = 0
         self.sourceText = text
         self.ambiguousWordsResults = ambiguous_words_results
+        self.ambiguousWords = ambiguousWords
         self.previousWindow = previousWindow
+        # List to keep track of all tree items
+        self.treeItems = []
         self.setWindowTitle("Document View")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Optionally resize the window
@@ -37,14 +43,19 @@ class DocumentWindow(QWidget):
         self.webView = QWebEngineView()  # Use QWebEngineView instead of QTextEdit
         self.webView.setHtml(text)  # Load the HTML content
 
-        # Side Panel
-        sidePanel = QVBoxLayout()
-        optionLabel = QLabel("Options will be here")
-        sidePanel.addWidget(optionLabel)
+        # Side Panel setup with scroll area
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.sidePanel = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        # Example usage of dynamic side panel content population
+        self.populateSidePanel()
 
         # Adding widgets to the content area with stretch factors
-        contentArea.addWidget(self.webView, 2)  # Document takes 2/3 of the space
-        contentArea.addLayout(sidePanel, 1)  # Side panel takes 1/3 of the space
+        contentArea.addWidget(self.webView, 2)
+        contentArea.addWidget(self.scrollArea, 1)
 
         mainLayout.addLayout(contentArea)
 
@@ -167,8 +178,68 @@ class DocumentWindow(QWidget):
         self.change_word_color(position, SELECTED_COLOR, True)
         self.scroll_to_word(position)
 
-    def selectNextAmbiguousWordByPosition(self, position):
-        for index, (_, start, _) in enumerate(self.ambiguousWordsResults):
-            if start == position:
-                return index
-        return None
+    def populateSidePanel(self):
+
+        self.treeItems.clear()
+
+        currentAmbiguousWordId = self.ambiguousWordsResults[self.currentIndex][2]
+        currentAmbiguousWord = self.ambiguousWords[currentAmbiguousWordId]
+
+        self.addOptionToSidePanel(currentAmbiguousWord)
+
+        for ambiguity in currentAmbiguousWord.find_related_ambiguities(self.ambiguousWords):
+            self.addOptionToSidePanel(ambiguity)
+
+
+
+
+
+    def addOptionToSidePanel(self, ambiguousWord: AmbiguousWord):
+        titleLabel = QLabel(ambiguousWord.Word)
+        titleLabel.setStyleSheet("font-weight: bold;")
+        self.sidePanel.addWidget(titleLabel)
+
+        descriptionLabel = QLabel(ambiguousWord.Meaning)
+        self.sidePanel.addWidget(descriptionLabel)
+
+        optionsTree = QTreeWidget()
+        optionsTree.setHeaderHidden(True)
+        optionsTree.setStyleSheet("""
+                                        QTreeWidget::item {
+                                            border: 1px solid #d9d9d9;
+                                            border-radius: 5px;
+                                            padding: 5px;
+                                            margin-top: 2px;
+                                        }
+                                        QTreeWidget::item:selected {
+                                            background-color: #f96d00;
+                                            border-color: #faebcd;
+                                        }
+                                    """)
+        if len(ambiguousWord.Variants) > 0:
+            for variant in ambiguousWord.Variants:
+                option = QTreeWidgetItem([variant])
+                optionsTree.addTopLevelItem(option)
+                self.treeItems.append(option)
+                optionsTree.setMinimumHeight(
+                    optionsTree.sizeHintForRow(0) * len(ambiguousWord.Variants) + 10)
+        else:
+            option = QTreeWidgetItem([ambiguousWord.Word])
+            optionsTree.addTopLevelItem(option)
+            self.treeItems.append(option)
+            optionsTree.setMinimumHeight(
+                optionsTree.sizeHintForRow(0) + 10)
+
+        optionsTree.itemClicked.connect(self.onItemClicked)
+        optionsTree.expandAll()
+        self.sidePanel.addWidget(optionsTree)
+
+    def onItemClicked(self, item, column):
+        # Deselect all items except the one clicked
+        for treeItem in self.treeItems:
+            if treeItem != item:
+                # Deselect item. There's no direct deselect method, but you can simulate it by:
+                treeItem.setSelected(False)
+            else:
+                # Ensure the clicked item is selected
+                treeItem.setSelected(True)
