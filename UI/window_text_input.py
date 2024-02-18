@@ -20,7 +20,14 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Text Input Window")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Increase the window size
+        self.centerWindow()
         #self.showFullScreen()
+
+    def centerWindow(self):
+        qr = self.frameGeometry()  # Get the QRect representing the geometry of the main window
+        cp = QApplication.desktop().availableGeometry().center()  # Get the center point of the screen
+        qr.moveCenter(cp)  # Set the center of the QRect to the center of the screen
+        self.move(qr.topLeft())
 
     def initUI(self):
         # Create layout and widget as before

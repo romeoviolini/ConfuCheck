@@ -24,8 +24,14 @@ class DocumentWindow(QWidget):
         self.setWindowTitle("Document View")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Optionally resize the window
-        # self.showFullScreen()  # Display the window in fullscreen mode
+        self.centerWindow()
+        self.showFullScreen()  # Display the window in fullscreen mode
 
+    def centerWindow(self):
+        qr = self.frameGeometry()  # Get the QRect representing the geometry of the main window
+        cp = QApplication.desktop().availableGeometry().center()  # Get the center point of the screen
+        qr.moveCenter(cp)  # Set the center of the QRect to the center of the screen
+        self.move(qr.topLeft())
     def initUI(self):
         text = self.highlight_words_in_html(self.sourceText, self.ambiguousWordsResults)
         text = formatTextAsHTML(text)
@@ -36,7 +42,7 @@ class DocumentWindow(QWidget):
         navigationPanel = QHBoxLayout()
         newTextButton = QPushButton("New Text")
         copyTextButton = QPushButton("Copy Text")  # New button for copying text
-        exportTextButton = QPushButton("Export Text")
+        exportTextButton = QPushButton("Save As...")
         navigationPanel.addWidget(newTextButton)
         navigationPanel.addWidget(copyTextButton)  # Add the Copy Text button
         navigationPanel.addWidget(exportTextButton)
