@@ -35,7 +35,7 @@ def find_ambiguous_words(text, ambiguous_words: List[AmbiguousWord], nlp):
             matches = pattern.finditer(text)
             for match in matches:
                 start = match.start()
-                results.append((match.group(), start, word.Id))
+                results.append((match.group(), start, word.Id, False, -1, -1))
 
     # Use spaCy NLP to find and categorize nouns and verbs
     doc = nlp(text)
@@ -45,10 +45,10 @@ def find_ambiguous_words(text, ambiguous_words: List[AmbiguousWord], nlp):
                 if token.lemma_.lower() == word.Word.lower():
                     if word.Type == TypeReadable.Noun.value and token.pos_ == "NOUN":
                         start = token.idx
-                        results.append((token.text, start, word.Id))
+                        results.append((token.text, start, word.Id, False, -1, -1))
                     elif word.Type == TypeReadable.Verb.value and token.pos_ == "VERB":
                         start = token.idx
-                        results.append((token.text, start, word.Id))
+                        results.append((token.text, start, word.Id, False, -1, -1))
 
     # Sort results by their start position in the text
     results.sort(key=lambda x: x[1])
