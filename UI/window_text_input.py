@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
-    QMessageBox, QScrollArea, QLabel
+    QMessageBox, QScrollArea, QLabel, QProgressDialog, QApplication
 from PyQt5.QtCore import Qt
 
 from UI.window_text_interaction import DocumentWindow
@@ -72,7 +72,17 @@ class MainWindow(QMainWindow):
         text = self.textEdit.toPlainText()
         print("Text confirmed:", text)
 
+        # Setup the progress dialog
+        progressDialog = QProgressDialog("Analyzing text, please wait...", None, 0, 0, self)
+        progressDialog.setCancelButton(None)  # Disable the Cancel button
+        progressDialog.setWindowModality(Qt.WindowModal)
+        progressDialog.setWindowTitle("Processing")
+        progressDialog.show()
+        QApplication.processEvents()
+
         results = find_ambiguous_words(text, self.ambiguousWords, self.nlp)
+
+        progressDialog.close()
 
         # Here, proceed with processing the confirmed text
         self.documentWindow = DocumentWindow(text, results, self.ambiguousWords)
@@ -116,4 +126,4 @@ class MainWindow(QMainWindow):
                 else:
                     self.textEdit.setText(self.currentText)  # Display the text
                     print("File uploaded and text saved for analysis.")
-
+                    self.onConfirmText()
