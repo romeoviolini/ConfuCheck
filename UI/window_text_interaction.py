@@ -1,10 +1,13 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication,
                              QTreeWidget, QTreeWidgetItem, QScrollArea)
 from PyQt5.QtCore import Qt
-from data_model import AmbiguousWord
+from data_model import AmbiguousWord, find_ambiguous_word_by_id
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from typing import List
+
+from text_replacer import replace_word_and_calculate_offset
+
 
 class DocumentWindow(QWidget):
     def __init__(self, text, ambiguous_words_results, ambiguousWords: List[AmbiguousWord] , parent=None, previousWindow=None):
@@ -19,7 +22,7 @@ class DocumentWindow(QWidget):
         self.setWindowTitle("Document View")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Optionally resize the window
-        self.showFullScreen()  # Display the window in fullscreen mode
+        # self.showFullScreen()  # Display the window in fullscreen mode
 
     def initUI(self):
         text = self.highlight_words_in_html(self.sourceText, self.ambiguousWordsResults)
@@ -29,7 +32,7 @@ class DocumentWindow(QWidget):
 
         # Navigation Panel
         navigationPanel = QHBoxLayout()
-        backButton = QPushButton("Back")
+        backButton = QPushButton("New Text")
         navigationPanel.addWidget(backButton)
         navigationPanel.addStretch()
         backButton.clicked.connect(self.goBack)
@@ -50,8 +53,9 @@ class DocumentWindow(QWidget):
         self.sidePanel = QVBoxLayout(self.scrollAreaWidgetContents)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        # Example usage of dynamic side panel content population
-        self.populateSidePanel()
+        if self.ambiguousWordsResults and len(self.ambiguousWordsResults) > 0:
+            # Example usage of dynamic side panel content population
+            self.populateSidePanel()
 
         # Adding widgets to the content area with stretch factors
         contentArea.addWidget(self.webView, 2)
@@ -67,7 +71,7 @@ class DocumentWindow(QWidget):
         backButton.clicked.connect(self.onBackClicked)  # Implement onBackClicked method
 
         # Progress label
-        self.progressLabel = QLabel("0/0")  # Update this dynamically based on actual progress
+        self.progressLabel = QLabel(f"confused words checked: 0/{len(self.ambiguousWordsResults)}")  # Update this dynamically based on actual progress
         self.progressLabel.setAlignment(Qt.AlignCenter)
 
         # Next arrow button
@@ -97,6 +101,7 @@ class DocumentWindow(QWidget):
     def onBackClicked(self):
         # Placeholder for back button functionality
         print("Back button clicked")
+        self.prepareSourceTextForExport()
 
     def onNextClicked(self):
         # Placeholder for next button functionality
@@ -177,24 +182,28 @@ class DocumentWindow(QWidget):
         position = self.ambiguousWordsResults[self.currentIndex][1]
         self.change_word_color(position, SELECTED_COLOR, True)
         self.scroll_to_word(position)
+        self.populateSidePanel()
 
     def populateSidePanel(self):
 
         self.treeItems.clear()
+        self.clearLayout(self.sidePanel)
 
         currentAmbiguousWordId = self.ambiguousWordsResults[self.currentIndex][2]
-        currentAmbiguousWord = self.ambiguousWords[currentAmbiguousWordId]
+        currentAmbiguousWord = find_ambiguous_word_by_id(self.ambiguousWords, currentAmbiguousWordId)
 
-        self.addOptionToSidePanel(currentAmbiguousWord)
+        self.addOptionToSidePanel(currentAmbiguousWord, 0)
 
+        ambiguityCount = 1
         for ambiguity in currentAmbiguousWord.find_related_ambiguities(self.ambiguousWords):
-            self.addOptionToSidePanel(ambiguity)
+            self.addOptionToSidePanel(ambiguity, ambiguityCount)
+            ambiguityCount += 1
 
 
 
 
 
-    def addOptionToSidePanel(self, ambiguousWord: AmbiguousWord):
+    def addOptionToSidePanel(self, ambiguousWord: AmbiguousWord, index):
         titleLabel = QLabel(ambiguousWord.Word)
         titleLabel.setStyleSheet("font-weight: bold;")
         self.sidePanel.addWidget(titleLabel)
@@ -217,16 +226,18 @@ class DocumentWindow(QWidget):
                                         }
                                     """)
         if len(ambiguousWord.Variants) > 0:
+            i = 0
             for variant in ambiguousWord.Variants:
                 option = QTreeWidgetItem([variant])
                 optionsTree.addTopLevelItem(option)
-                self.treeItems.append(option)
+                self.treeItems.append((option,index,i))
                 optionsTree.setMinimumHeight(
                     optionsTree.sizeHintForRow(0) * len(ambiguousWord.Variants) + 10)
+                i += 1
         else:
             option = QTreeWidgetItem([ambiguousWord.Word])
             optionsTree.addTopLevelItem(option)
-            self.treeItems.append(option)
+            self.treeItems.append((option,index,0))
             optionsTree.setMinimumHeight(
                 optionsTree.sizeHintForRow(0) + 10)
 
@@ -237,9 +248,94 @@ class DocumentWindow(QWidget):
     def onItemClicked(self, item, column):
         # Deselect all items except the one clicked
         for treeItem in self.treeItems:
-            if treeItem != item:
+            if treeItem[0] != item:
                 # Deselect item. There's no direct deselect method, but you can simulate it by:
-                treeItem.setSelected(False)
+                treeItem[0].setSelected(False)
             else:
                 # Ensure the clicked item is selected
-                treeItem.setSelected(True)
+                treeItem[0].setSelected(True)
+                print(f"{treeItem[0].text(column)} option: {treeItem[1]} position: {treeItem[2]}")
+                # results.append((match.group(), start, word.Id, False, -1, -1))
+                resultWord = self.ambiguousWordsResults[self.currentIndex]
+                if resultWord[3] == False:
+                    count_true = len([item for item in self.ambiguousWordsResults if item[3] == True])
+                    print("Time to count")
+                    print(count_true)
+                    self.progressLabel.setText(f"confused words checked: {count_true+1}/{len(self.ambiguousWordsResults)}")
+                self.ambiguousWordsResults[self.currentIndex] = (resultWord[0], resultWord[1], resultWord[2], True, treeItem[1], treeItem[2])
+                self.updateCurrentWordOnHTMLText(treeItem[0].text(column))
+
+    def clearLayout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def updateCurrentWordOnHTMLText(self, newText):
+
+        position = self.ambiguousWordsResults[self.currentIndex][1]
+        sourceText = self.ambiguousWordsResults[self.currentIndex][0]
+        newText = self.adapt_case(sourceText, newText)
+
+        script = f"""
+                var element = document.getElementById('{position}');
+                if (element) {{
+                    element.innerText = '{newText}';
+                    element.style.backgroundColor = '#e0ffcd';
+                }}
+                """
+        self.webView.page().runJavaScript(script)
+
+    def adapt_case(self, source, target):
+        # Uppercase
+        if source.isupper():
+            return target.upper()
+        # Lowercase
+        elif source.islower():
+            return target.lower()
+        # Capitalized
+        elif source.istitle():
+            return target.capitalize()
+        # Handle more specific mixed case scenarios here if needed
+        else:
+            return target
+
+    def prepareSourceTextForExport(self):
+
+        offset_accumulator = 0
+
+        for result in self.ambiguousWordsResults:
+
+            print(result)
+
+            if not result[3]:
+                continue
+
+            ambiguousWord = find_ambiguous_word_by_id(self.ambiguousWords, result[2])
+            correctWord = ambiguousWord.Word
+            if result[4] > 0:
+                ambiguities = ambiguousWord.find_related_ambiguities(self.ambiguousWords)
+                print(len(ambiguities))
+                currentAmbiguity = ambiguities[result[4]-1]
+
+                if not currentAmbiguity.Variants or len(currentAmbiguity.Variants) == 0:
+                    correctWord = currentAmbiguity.Word
+                else:
+                    correctWord = ambiguities[result[4] - 1].Variants[result[5]]
+
+            correctWord = self.adapt_case(result[0], correctWord)
+
+
+            # Update the current word's position with the accumulated offset so far
+            current_position = result[1] + offset_accumulator
+
+            # Replace the word and calculate the offset
+            self.sourceText, offset = replace_word_and_calculate_offset(self.sourceText, current_position, result[0], correctWord)
+
+            # Update the offset accumulator
+            offset_accumulator += offset
+
+        print(self.sourceText)
+
+
+
