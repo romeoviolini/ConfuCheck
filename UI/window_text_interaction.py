@@ -303,39 +303,42 @@ class DocumentWindow(QWidget):
     def prepareSourceTextForExport(self):
 
         offset_accumulator = 0
+        text = self.sourceText
 
         for result in self.ambiguousWordsResults:
 
             print(result)
 
-            if not result[3]:
-                continue
+            if result[3] != False:
+                ambiguousWord = find_ambiguous_word_by_id(self.ambiguousWords, result[2])
+                correctWord = ambiguousWord.Word
+                if result[4] > 0:
+                    ambiguities = ambiguousWord.find_related_ambiguities(self.ambiguousWords)
+                    print(len(ambiguities))
+                    currentAmbiguity = ambiguities[result[4]-1]
 
-            ambiguousWord = find_ambiguous_word_by_id(self.ambiguousWords, result[2])
-            correctWord = ambiguousWord.Word
-            if result[4] > 0:
-                ambiguities = ambiguousWord.find_related_ambiguities(self.ambiguousWords)
-                print(len(ambiguities))
-                currentAmbiguity = ambiguities[result[4]-1]
-
-                if not currentAmbiguity.Variants or len(currentAmbiguity.Variants) == 0:
-                    correctWord = currentAmbiguity.Word
+                    if not currentAmbiguity.Variants or len(currentAmbiguity.Variants) == 0:
+                        correctWord = currentAmbiguity.Word
+                    else:
+                        correctWord = currentAmbiguity.Variants[result[5]]
                 else:
-                    correctWord = ambiguities[result[4] - 1].Variants[result[5]]
+                    if not ambiguousWord.Variants or len(ambiguousWord.Variants) == 0:
+                        correctWord = ambiguousWord.Word
+                    else:
+                        correctWord = ambiguousWord.Variants[result[5]]
 
-            correctWord = self.adapt_case(result[0], correctWord)
+                correctWord = self.adapt_case(result[0], correctWord)
 
+                # Update the current word's position with the accumulated offset so far
+                current_position = result[1] + offset_accumulator
 
-            # Update the current word's position with the accumulated offset so far
-            current_position = result[1] + offset_accumulator
+                # Replace the word and calculate the offset
+                text, offset = replace_word_and_calculate_offset(text, current_position, result[0], correctWord)
 
-            # Replace the word and calculate the offset
-            self.sourceText, offset = replace_word_and_calculate_offset(self.sourceText, current_position, result[0], correctWord)
+                # Update the offset accumulator
+                offset_accumulator += offset
 
-            # Update the offset accumulator
-            offset_accumulator += offset
-
-        print(self.sourceText)
+        print(text)
 
 
 
