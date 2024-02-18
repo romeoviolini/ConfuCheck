@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
         self.documentWindow = DocumentWindow(text, results, self.ambiguousWords)
         self.documentWindow.previousWindow = self
         self.documentWindow.show()
+        self.textEdit.clear()
         self.close()
 
     def onUploadFile(self):
