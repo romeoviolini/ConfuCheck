@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
         results = find_ambiguous_words(text, self.ambiguousWords, self.nlp)
 
         # Here, proceed with processing the confirmed text
-        self.documentWindow = DocumentWindow(text, results)
+        self.documentWindow = DocumentWindow(text, results, self.ambiguousWords)
         self.documentWindow.previousWindow = self
         self.documentWindow.show()
         self.close()
