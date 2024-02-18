@@ -68,10 +68,6 @@ class DocumentWindow(QWidget):
         self.sidePanel = QVBoxLayout(self.scrollAreaWidgetContents)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        if self.ambiguousWordsResults and len(self.ambiguousWordsResults) > 0:
-            # Example usage of dynamic side panel content population
-            self.populateSidePanel()
-
         # Adding widgets to the content area with stretch factors
         contentArea.addWidget(self.webView, 2)
         contentArea.addWidget(self.scrollArea, 1)
@@ -112,6 +108,10 @@ class DocumentWindow(QWidget):
         self.setLayout(mainLayout)
 
         self.webView.loadFinished.connect(self.onLoadFinished)
+
+        if self.ambiguousWordsResults and len(self.ambiguousWordsResults) > 0:
+            # Example usage of dynamic side panel content population
+            self.populateSidePanel()
 
     def newText(self):
         reply = QMessageBox.question(self, 'Confirm New Text',
@@ -265,7 +265,7 @@ class DocumentWindow(QWidget):
             self.addOptionToSidePanel(ambiguity, ambiguityCount)
             ambiguityCount += 1
 
-
+        self.currentOptionSelected()
 
 
 
@@ -405,6 +405,18 @@ class DocumentWindow(QWidget):
                 offset_accumulator += offset
 
         return text
+
+    def currentOptionSelected(self):
+        if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
+            return
+        currentResult = self.ambiguousWordsResults[self.currentIndex]
+        option = currentResult[4]
+        subOption = currentResult[5]
+
+        if option == -1 and subOption == -1:
+           return
+        elif 0 < self.currentOptionArrayIndex < len(self.treeItems):
+            self.onItemClicked(self.treeItems[self.currentOptionArrayIndex][0], 0)
 
     def nextOptionSelected(self):
         if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
