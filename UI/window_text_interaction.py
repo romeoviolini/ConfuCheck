@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QApplication,
                              QTreeWidget, QTreeWidgetItem, QScrollArea, QFileDialog, QMessageBox)
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QPoint
 from data_model import AmbiguousWord, find_ambiguous_word_by_id
 from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -321,6 +321,7 @@ class DocumentWindow(QWidget):
                 # Ensure the clicked item is selected
                 self.currentOptionArrayIndex = index
                 treeItem[0].setSelected(True)
+                self.scrollToWidget(treeItem[0].treeWidget())
                 print(f"{treeItem[0].text(column)} option: {treeItem[1]} position: {treeItem[2]}")
                 # results.append((match.group(), start, word.Id, False, -1, -1))
                 resultWord = self.ambiguousWordsResults[self.currentIndex]
@@ -459,3 +460,13 @@ class DocumentWindow(QWidget):
             self.newText()
         else:
             super().keyPressEvent(event)  # Call the base class method to handle other key presses
+
+    def scrollToWidget(self, widget):
+        # Get the vertical position of the widget relative to the scroll area's contents
+        widgetPosY = widget.mapTo(self.scrollArea.widget(), QPoint(0, 0)).y()
+
+        # Adjust the vertical scrollbar position to make the widget visible
+        self.scrollArea.verticalScrollBar().setValue(widgetPosY - 50)  # Adjust yMargin as needed
+
+        # Keep the horizontal scrollbar position unchanged (aligned to the left)
+        self.scrollArea.horizontalScrollBar().setValue(self.scrollArea.horizontalScrollBar().minimum())
