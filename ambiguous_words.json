@@ -1,21 +1,878 @@
 [
     {
-        "Id": 0,
         "Word": "accept",
         "Meaning": "to receive.\ne.g. He accepts defeat well.",
         "Type": 1,
         "Ambiguities": [
             1
         ],
-        "Variants": ["accept", "accepts", "accepted"]
+        "Variants": [
+            "accept",
+            "accepts",
+            "accepting",
+            "accepted"
+        ],
+        "Id": 0
     },
     {
-        "Id": 1,
         "Word": "except",
-        "Meaning": "to take or leave out.\ne.g. e.g. Please take all the books off the shelf except for the red one.",
+        "Meaning": "to take or leave out.\ne.g. Please take all the books off the shelf except for the red one.",
         "Type": 2,
         "Ambiguities": [
             0
-        ]
+        ],
+        "Id": 1
+    },
+    {
+        "Word": "affect",
+        "Meaning": "to influence.\ne.g. Lack of sleep affects the quality of your work.",
+        "Type": 1,
+        "Ambiguities": [
+            3,4
+        ],
+        "Variants": [
+            "affect",
+            "affects",
+            "affecting",
+            "affected"
+        ],
+        "Id": 2
+    },
+    {
+        "Word": "effect",
+        "Meaning": "n., result.\ne.g. The subtle effect of the lighting made the room look ominous.",
+        "Type": 0,
+        "Ambiguities": [
+            2,4
+        ],
+        "Variants": [
+            "effect",
+            "effects"
+        ],
+        "Id": 3
+    },
+    {
+        "Word": "effect",
+        "Meaning": "v., to accomplish.\ne.g. Can the university effect such a change without disrupting classes?",
+        "Type": 1,
+        "Ambiguities": [
+            2,3
+        ],
+        "Variants": [
+            "effect",
+            "effects",
+            "effecting",
+            "effected"
+        ],
+        "Id": 4
+    },
+    {
+        "Word": "allusion",
+        "Meaning": "an indirect reference.\ne.g. The professor made an allusion to Virginia Woolf's work.",
+        "Type": 0,
+        "Ambiguities": [
+            6
+        ],
+        "Variants": [
+            "allusion",
+            "allusions"
+        ],
+        "Id": 5
+    },
+    {
+        "Word": "illusion",
+        "Meaning": "a false perception of reality.\ne.g. They saw a mirage: that is a type of illusion one sees in the desert.",
+        "Type": 0,
+        "Ambiguities": [
+            5
+        ],
+        "Variants": [
+            "illusion",
+            "illusions"
+        ],
+        "Id": 6
+    },
+    {
+        "Word": "all ready",
+        "Meaning": "prepared.\ne.g. Dinner was all ready when the guests arrived.",
+        "Type": 2,
+        "Ambiguities": [
+            8
+        ],
+        "Id": 7
+    },
+    {
+        "Word": "already",
+        "Meaning": "by this time.\ne.g. The turkey was already burned when the guests arrived.",
+        "Type": 2,
+        "Ambiguities": [
+            7
+        ],
+        "Id": 8
+    },
+    {
+        "Word": "altogether",
+        "Meaning": "entirely.\ne.g. Altogether, I thought that the student's presentation was well planned.",
+        "Type": 2,
+        "Ambiguities": [
+            10
+        ],
+        "Id": 9
+    },
+    {
+        "Word": "all together",
+        "Meaning": "gathered, with everything in one place.\ne.g. We were all together at the family reunion last spring.",
+        "Type": 2,
+        "Ambiguities": [
+            9
+        ],
+        "Id": 10
+    },
+    {
+        "Word": "apart",
+        "Meaning": "to be separated.\ne.g. The chain-link fence kept the angry dogs apart.",
+        "Type": 2,
+        "Ambiguities": [
+            12
+        ],
+        "Id": 11
+    },
+    {
+        "Word": "a part",
+        "Meaning": "to be joined with.\ne.g. The new course was a part of the new field of study at the university.",
+        "Type": 2,
+        "Ambiguities": [
+            11
+        ],
+        "Id": 12
+    },
+    {
+        "Word": "ascent",
+        "Meaning": "climb.\ne.g. The plane's ascent made my ears pop.",
+        "Type": 0,
+        "Ambiguities": [
+            14
+        ],
+        "Variants": [
+            "ascent",
+            "ascents"
+        ],
+        "Id": 13
+    },
+    {
+        "Word": "assent",
+        "Meaning": "agreement.\ne.g. The martian assented to undergo experiments.",
+        "Type": 0,
+        "Ambiguities": [
+            13
+        ],
+        "Variants": [
+            "assent",
+            "assents"
+        ],
+        "Id": 14
+    },
+    {
+        "Word": "breath",
+        "Meaning": "noun, air inhaled or exhaled.\ne.g. You could see his breath in the cold air.",
+        "Type": 0,
+        "Ambiguities": [
+            16
+        ],
+        "Variants": [
+            "breath",
+            "breaths"
+        ],
+        "Id": 15
+    },
+    {
+        "Word": "breathe",
+        "Meaning": "verb, to inhale or exhale.\ne.g. If you don't breathe, then you are dead.",
+        "Type": 1,
+        "Ambiguities": [
+            15
+        ],
+        "Variants": [
+            "breathe",
+            "breathes",
+            "breathing",
+            "breathed"
+        ],
+        "Id": 16
+    },
+    {
+        "Word": "capital",
+        "Meaning": "seat of government. Also financial resources.\ne.g. The capital of Virginia is Richmond.",
+        "Type": 2,
+        "Ambiguities": [
+            18
+        ],
+        "Id": 17
+    },
+    {
+        "Word": "capitol",
+        "Meaning": "the actual building in which the legislative body meets\ne.g. The governor announced his resignation in a speech given at the capitol today.",
+        "Type": 0,
+        "Ambiguities": [
+            17
+        ],
+        "Variants": [
+            "capitol",
+            "capitols"
+        ],
+        "Id": 18
+    },
+    {
+        "Word": "cite",
+        "Meaning": "to quote or document\ne.g. I cited ten quotes from the same author in my paper.",
+        "Type": 1,
+        "Ambiguities": [
+            20,21
+        ],
+        "Variants": [
+            "cite",
+            "cites",
+            "citing",
+            "cited"
+        ],
+        "Id": 19
+    },
+    {
+        "Word": "sight",
+        "Meaning": "vision\ne.g. The sight of the American flag arouses different emotions in different parts of the world.",
+        "Type": 0,
+        "Ambiguities": [
+            19,
+            21
+        ],
+        "Variants": [
+            "sight",
+            "sights"
+        ],
+        "Id": 20
+    },
+    {
+        "Word": "site",
+        "Meaning": "position or place\ne.g. The new office building was built on the site of a cemetery.",
+        "Type": 0,
+        "Ambiguities": [
+            19,
+            20
+        ],
+        "Variants": [
+            "site",
+            "sites"
+        ],
+        "Id": 21
+    },
+    {
+        "Word": "complement",
+        "Meaning": "noun, something that completes; verb, to complete\ne.g. A nice dry white wine complements a seafood entree.",
+        "Type": 1,
+        "Ambiguities": [
+            23
+        ],
+        "Variants": [
+            "complement",
+            "complements",
+            "complementing",
+            "complemented"
+        ],
+        "Id": 22
+    },
+    {
+        "Word": "compliment",
+        "Meaning": "noun, praise; verb, to praise\ne.g. The professor complimented Betty on her proper use of a comma.",
+        "Type": 1,
+        "Ambiguities": [
+            22
+        ],
+        "Variants": [
+            "compliment",
+            "compliments",
+            "complimenting",
+            "complimented"
+        ],
+        "Id": 23
+    },
+    {
+        "Word": "conscience",
+        "Meaning": "sense of right and wrong\ne.g. The student's conscience kept him from cheating on the exam.",
+        "Type": 0,
+        "Ambiguities": [
+            25
+        ],
+        "Variants": [
+            "conscience",
+            "consciences"
+        ],
+        "Id": 24
+    },
+    {
+        "Word": "conscious",
+        "Meaning": "awake\ne.g. I was conscious when the burglar entered the house.",
+        "Type": 1,
+        "Ambiguities": [
+            24
+        ],
+        "Variants": [
+            "conscious",
+            "conscious",
+            "consciousing",
+            "conscioused"
+        ],
+        "Id": 25
+    },
+    {
+        "Word": "council",
+        "Meaning": "a group that consults or advises\ne.g. The men and women on the council voted in favor of an outdoor concert in their town.",
+        "Type": 0,
+        "Ambiguities": [
+            27
+        ],
+        "Variants": [
+            "council",
+            "councils"
+        ],
+        "Id": 26
+    },
+    {
+        "Word": "counsel",
+        "Meaning": "to advise\ne.g. The parole officer counseled the convict before he was released.",
+        "Type": 1,
+        "Ambiguities": [
+            26
+        ],
+        "Variants": [
+            "counsel",
+            "counsels",
+            "counseling",
+            "counseled"
+        ],
+        "Id": 27
+    },
+    {
+        "Word": "elicit",
+        "Meaning": "to draw or bring out\ne.g. The teacher elicited the correct response from the student.",
+        "Type": 1,
+        "Ambiguities": [
+            29
+        ],
+        "Variants": [
+            "elicit",
+            "elicits",
+            "eliciting",
+            "elicited"
+        ],
+        "Id": 28
+    },
+    {
+        "Word": "illicit",
+        "Meaning": "illegal\ne.g. The Columbian drug lord was arrested for his illicit activities.",
+        "Type": 2,
+        "Ambiguities": [
+            28
+        ],
+        "Id": 29
+    },
+    {
+        "Word": "eminent",
+        "Meaning": "famous, respected\ne.g. The eminent podiatrist won the Physician of the Year award.",
+        "Type": 2,
+        "Ambiguities": [
+            31,
+            32
+        ],
+        "Id": 30
+    },
+    {
+        "Word": "immanent",
+        "Meaning": "inherent or intrinsic\ne.g. The meaning of the poem was immanent, and not easily recognized.",
+        "Type": 2,
+        "Ambiguities": [
+            30,
+            32
+        ],
+        "Id": 31
+    },
+    {
+        "Word": "imminent",
+        "Meaning": "ready to take place\ne.g. A fight between my sister and me is imminent from the moment I enter my house.",
+        "Type": 2,
+        "Ambiguities": [
+            30,
+            31
+        ],
+        "Id": 32
+    },
+    {
+        "Word": "its",
+        "Meaning": "of or belonging to it\ne.g. The baby will scream as soon as its mother walks out of the room.",
+        "Type": 2,
+        "Ambiguities": [
+            34
+        ],
+        "Id": 33
+    },
+    {
+        "Word": "it's",
+        "Meaning": "contraction for it is\ne.g. It's a beautiful day in the neighborhood.",
+        "Type": 2,
+        "Ambiguities": [
+            33
+        ],
+        "Id": 34
+    },
+    {
+        "Word": "lead",
+        "Meaning": "noun, a type of metal\ne.g. Is that pipe made of lead?",
+        "Type": 0,
+        "Ambiguities": [
+            36
+        ],
+        "Variants": [
+            "lead",
+            "leads"
+        ],
+        "Id": 35
+    },
+    {
+        "Word": "led",
+        "Meaning": "verb, past tense of the verb \"to lead\"\ne.g. She led the campers on an over-night hike.",
+        "Type": 1,
+        "Ambiguities": [
+            35
+        ],
+        "Variants": [
+            "lead",
+            "leads",
+            "leading",
+            "led"
+        ],
+        "Id": 36
+    },
+    {
+        "Word": "lie",
+        "Meaning": "to lie down (a person or animal. hint: people can tell lies)\ne.g. I have a headache, so I'm going to lie down for a while.",
+        "Type": 1,
+        "Ambiguities": [
+            38
+        ],
+        "Variants": [
+            "lie",
+            "lies",
+            "lying",
+            "lay",
+            "lain"
+        ],
+        "Id": 37
+    },
+    {
+        "Word": "lay",
+        "Meaning": "to lay an object down.\ne.g. \"Lay down that shotgun, Pappy!\" The sheriff demanded of the crazed moonshiner.",
+        "Type": 1,
+        "Ambiguities": [
+            37
+        ],
+        "Variants": [
+            "lay",
+            "lays",
+            "laying",
+            "laid"
+        ],
+        "Id": 38
+    },
+    {
+        "Word": "lose",
+        "Meaning": "verb, to misplace or not win\ne.g. Mom glared at Mikey. \"If you lose that new lunchbox, don't even think of coming home!\"",
+        "Type": 1,
+        "Ambiguities": [
+            40
+        ],
+        "Variants": [
+            "lose",
+            "loses",
+            "losing",
+            "lost"
+        ],
+        "Id": 39
+    },
+    {
+        "Word": "loose",
+        "Meaning": "adjective, to not be tight; verb (rarely used)--to release\ne.g. The burglar's pants were so loose that he was sure to lose the race with the cop chasing him.",
+        "Type": 2,
+        "Ambiguities": [
+            39
+        ],
+        "Id": 40
+    },
+    {
+        "Word": "novel",
+        "Meaning": "noun, a book that is a work of fiction. Do not use \"novel\" for nonfiction; use \"book\" or \"work.\"\ne.g. Mark Twain wrote his novel Adventures of Huckleberry Finn when he was already well known, but before he published many other works of fiction and nonfiction.",
+        "Type": 0,
+        "Ambiguities": [],
+        "Variants": [
+            "novel",
+            "novels"
+        ],
+        "Id": 41
+    },
+    {
+        "Word": "passed",
+        "Meaning": "verb, past tense of \"to pass,\" to have moved\ne.g. The tornado passed through the city quickly, but it caused great damage.",
+        "Type": 1,
+        "Ambiguities": [
+            43
+        ],
+        "Variants": [
+            "pass",
+            "passes",
+            "passing",
+            "passed"
+        ],
+        "Id": 42
+    },
+    {
+        "Word": "past",
+        "Meaning": "belonging to a former time or place\ne.g. Who was the past president of Microsquish Computers?",
+        "Type": 2,
+        "Ambiguities": [
+            42
+        ],
+        "Id": 43
+    },
+    {
+        "Word": "precede",
+        "Meaning": "to come before\ne.g. Pre-writing precedes the rough draft of good papers.",
+        "Type": 1,
+        "Ambiguities": [
+            45
+        ],
+        "Variants": [
+            "precede",
+            "precedes",
+            "preceding",
+            "preceded"
+        ],
+        "Id": 44
+    },
+    {
+        "Word": "proceed",
+        "Meaning": "to go forward\ne.g. He proceeded to pass back the failing grades on the exam.",
+        "Type": 1,
+        "Ambiguities": [
+            44
+        ],
+        "Variants": [
+            "proceed",
+            "proceeds",
+            "proceeding",
+            "proceeded"
+        ],
+        "Id": 45
+    },
+    {
+        "Word": "principal",
+        "Meaning": "adjective, most important; noun, a person who has authority\ne.g. The principal ingredient in chocolate chip cookies is chocolate chips.",
+        "Type": 0,
+        "Ambiguities": [
+            47
+        ],
+        "Variants": [
+            "principal",
+            "principals"
+        ],
+        "Id": 46
+    },
+    {
+        "Word": "principle",
+        "Meaning": "a general or fundamental truth\ne.g. The study was based on the principle of gravity.",
+        "Type": 0,
+        "Ambiguities": [
+            46
+        ],
+        "Variants": [
+            "principle",
+            "principles"
+        ],
+        "Id": 47
+    },
+    {
+        "Word": "quote",
+        "Meaning": "verb, to cite\ne.g. I would like to quote Dickens in my next paper.",
+        "Type": 1,
+        "Ambiguities": [
+            49
+        ],
+        "Variants": [
+            "quote",
+            "quotes",
+            "quoting",
+            "quoted"
+        ],
+        "Id": 48
+    },
+    {
+        "Word": "quotation",
+        "Meaning": "noun, the act of citing\ne.g. The book of famous quotations inspired us all.",
+        "Type": 0,
+        "Ambiguities": [
+            48
+        ],
+        "Variants": [
+            "quotation",
+            "quotations"
+        ],
+        "Id": 49
+    },
+    {
+        "Word": "reluctant",
+        "Meaning": "to hesitate or feel unwilling\ne.g. We became reluctant to drive further and eventually turned back when the road became icy.",
+        "Type": 2,
+        "Ambiguities": [
+            51
+        ],
+        "Id": 50
+    },
+    {
+        "Word": "reticent",
+        "Meaning": "to be reluctant to speak; to be reserved in manner\ne.g. They called him reticent, because he rarely spoke. But he listened carefully and only spoke when he had something important to say.",
+        "Type": 2,
+        "Ambiguities": [
+            50
+        ],
+        "Id": 51
+    },
+    {
+        "Word": "stationary",
+        "Meaning": "standing still\ne.g. The accident was my fault because I ran into a stationary object.",
+        "Type": 2,
+        "Ambiguities": [
+            53
+        ],
+        "Id": 52
+    },
+    {
+        "Word": "stationery",
+        "Meaning": "writing paper\ne.g. My mother bought me stationery that was on recycled paper.",
+        "Type": 0,
+        "Ambiguities": [
+            52
+        ],
+        "Variants": [
+            "stationery"
+        ],
+        "Id": 53
+    },
+    {
+        "Word": "supposed to",
+        "Meaning": "correct form for \"to be obligated to\" or \"presumed to\"\ne.g. We are supposed to check our bags before we board.",
+        "Type": 2,
+        "Ambiguities": [
+            55
+        ],
+        "Id": 54
+    },
+    {
+        "Word": "suppose",
+        "Meaning": "to guess or make a conjecture\ne.g. Do you suppose we will get to the airport on time?",
+        "Type": 1,
+        "Ambiguities": [
+            54
+        ],
+        "Variants": [
+            "suppose",
+            "supposes",
+            "supposing",
+            "supposed"
+        ],
+        "Id": 55
+    },
+    {
+        "Word": "than",
+        "Meaning": "use with comparisons\ne.g. I would rather go out to eat than eat at the dining hall.",
+        "Type": 2,
+        "Ambiguities": [
+            57
+        ],
+        "Id": 56
+    },
+    {
+        "Word": "then",
+        "Meaning": "at that time, or next\ne.g. I studied for my exam for seven hours, and then I went to bed.",
+        "Type": 2,
+        "Ambiguities": [
+            56
+        ],
+        "Id": 57
+    },
+    {
+        "Word": "their",
+        "Meaning": "possessive form of they\ne.g. Their house is at the end of the block.",
+        "Type": 2,
+        "Ambiguities": [
+            59,60
+        ],
+        "Id": 58
+    },
+    {
+        "Word": "there",
+        "Meaning": "indicates location\ne.g. There goes my chance of winning the lottery!",
+        "Type": 2,
+        "Ambiguities": [
+            58,60
+        ],
+        "Id": 59
+    },
+    {
+        "Word": "they're",
+        "Meaning": "contraction for \"they are\"\ne.g. They're in Europe for the summer--again!",
+        "Type": 2,
+        "Ambiguities": [
+            58,
+            59
+        ],
+        "Id": 60
+    },
+    {
+        "Word": "through",
+        "Meaning": "by means of; finished; into or out of\ne.g. He plowed right through the other team's defensive line.",
+        "Type": 2,
+        "Ambiguities": [
+            62,
+            63,
+            64,
+            65
+
+        ],
+        "Id": 61
+    },
+    {
+        "Word": "threw",
+        "Meaning": "past tense of throw\ne.g. She threw away his love letters.",
+        "Type": 1,
+        "Ambiguities": [
+            61,
+            63,
+            64,
+            65
+        ],
+        "Variants": [
+            "throw",
+            "throws",
+            "throwing",
+            "threw"
+        ],
+        "Id": 62
+    },
+    {
+        "Word": "thorough",
+        "Meaning": "careful or complete\ne.g. John thoroughly cleaned his room; there was not even a speck of dust when he finished.",
+        "Type": 2,
+        "Ambiguities": [
+            61,
+            62,
+            64,
+            65
+        ],
+        "Id": 63
+    },
+    {
+        "Word": "though",
+        "Meaning": "however; nevertheless\ne.g. He's really a sweetheart though he looks tough on the outside.",
+        "Type": 2,
+        "Ambiguities": [
+            61,
+            62,
+            63,
+            65
+        ],
+        "Id": 64
+    },
+    {
+        "Word": "thru",
+        "Meaning": "abbreviated slang for through; not appropriate in standard writing\ne.g. We're thru for the day!",
+        "Type": 2,
+        "Ambiguities": [
+            61,
+            62,
+            63,
+            64
+        ],
+        "Id": 65
+    },
+    {
+        "Word": "to",
+        "Meaning": "toward\ne.g. I went to the University of Richmond.",
+        "Type": 2,
+        "Ambiguities": [
+            67,
+            68
+        ],
+        "Id": 66
+    },
+    {
+        "Word": "too",
+        "Meaning": "also, or excessively\ne.g. He drank too many screwdrivers and was unable to drive home.",
+        "Type": 2,
+        "Ambiguities": [
+            66,
+            68
+        ],
+        "Id": 67
+    },
+    {
+        "Word": "two",
+        "Meaning": "a number\ne.g. Only two students did not turn in the assignment.",
+        "Type": 2,
+        "Ambiguities": [
+            66,
+            67
+        ],
+        "Id": 68
+    },
+    {
+        "Word": "who",
+        "Meaning": "pronoun, referring to a person or persons\ne.g. Jane wondered how Jack, who is so smart, could be having difficulties in Calculus.",
+        "Type": 2,
+        "Ambiguities": [
+            70,
+            71,
+            72
+        ],
+        "Id": 69
+    },
+    {
+        "Word": "which",
+        "Meaning": "pronoun, replacing a singular or plural thing(s);not used to refer to persons\ne.g. Which section of history did you get into?",
+        "Type": 2,
+        "Ambiguities": [
+            69,
+            71,
+            72
+        ],
+        "Id": 70
+    },
+    {
+        "Word": "that",
+        "Meaning": "used to refer to things or a group or class of people\ne.g. I lost the book that I bought last week.",
+        "Type": 2,
+        "Ambiguities": [
+            69,
+            70,
+            72
+        ],
+        "Id": 71
+    },
+    {
+        "Word": "whom",
+        "Meaning": "used as an object\ne.g. Whom did Sarah choose as her replacement?",
+        "Type": 2,
+        "Ambiguities": [
+            69,
+            70,
+            71
+        ],
+        "Id": 72
     }
 ]
