@@ -28,6 +28,8 @@ def find_ambiguous_words(text, ambiguous_words: List[AmbiguousWord], nlp):
     """
 
     results = []
+    covered_positions = set()
+
     # Search for 'Other' type words using regular expressions
     for word in ambiguous_words:
         if word.Type == TypeReadable.Other.value:
@@ -35,22 +37,24 @@ def find_ambiguous_words(text, ambiguous_words: List[AmbiguousWord], nlp):
             matches = pattern.finditer(text)
             for match in matches:
                 start = match.start()
-                results.append((match.group(), start, word.Id, False, -1, -1))
+                if start not in covered_positions:
+                    results.append((match.group(), start, word.Id, False, -1, -1))
+                    covered_positions.update(range(start, match.end()))
 
     # Use spaCy NLP to find and categorize nouns and verbs
     doc = nlp(text)
     for token in doc:
+        start = token.idx
+        end = start + len(token.text)
+        if start in covered_positions:
+            continue  # Skip if this start position is already covered
+
         for word in ambiguous_words:
-            if word.Type != TypeReadable.Other.value:
-                if token.lemma_.lower() == word.Word.lower():
-                    if word.Type == TypeReadable.Noun.value and token.pos_ == "NOUN":
-                        start = token.idx
-                        results.append((token.text, start, word.Id, False, -1, -1))
-                    elif word.Type == TypeReadable.Verb.value and token.pos_ == "VERB":
-                        start = token.idx
-                        results.append((token.text, start, word.Id, False, -1, -1))
+            if word.Type != TypeReadable.Other.value and token.lemma_.lower() == word.Word.lower():
+                if (word.Type == TypeReadable.Noun.value and token.pos_ == "NOUN") or \
+                        (word.Type == TypeReadable.Verb.value and token.pos_ == "VERB"):
+                    results.append((token.text, start, word.Id, False, -1, -1))
+                    covered_positions.update(range(start, end))
 
-    # Sort results by their start position in the text
     results.sort(key=lambda x: x[1])
-
     return results
