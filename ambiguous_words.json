@@ -28,7 +28,7 @@
         "Meaning": "to influence.\ne.g. Lack of sleep affects the quality of your work.",
         "Type": 1,
         "Ambiguities": [
-            3,4
+            3
         ],
         "Variants": [
             "affect",
@@ -40,23 +40,10 @@
     },
     {
         "Word": "effect",
-        "Meaning": "n., result.\ne.g. The subtle effect of the lighting made the room look ominous.",
+        "Meaning": "noun, result.\ne.g. The subtle effect of the lighting made the room look ominous.\nverb, to accomplish.\ne.g. Can the university effect such a change without disrupting classes?",
         "Type": 0,
         "Ambiguities": [
-            2,4
-        ],
-        "Variants": [
-            "effect",
-            "effects"
-        ],
-        "Id": 3
-    },
-    {
-        "Word": "effect",
-        "Meaning": "v., to accomplish.\ne.g. Can the university effect such a change without disrupting classes?",
-        "Type": 1,
-        "Ambiguities": [
-            2,3
+            2
         ],
         "Variants": [
             "effect",
@@ -64,7 +51,7 @@
             "effecting",
             "effected"
         ],
-        "Id": 4
+        "Id": 3
     },
     {
         "Word": "allusion",
@@ -162,13 +149,15 @@
     {
         "Word": "assent",
         "Meaning": "agreement.\ne.g. The martian assented to undergo experiments.",
-        "Type": 0,
+        "Type": 1,
         "Ambiguities": [
             13
         ],
         "Variants": [
             "assent",
-            "assents"
+            "assents",
+            "assenting",
+            "assented"
         ],
         "Id": 14
     },
@@ -311,15 +300,12 @@
     {
         "Word": "conscious",
         "Meaning": "awake\ne.g. I was conscious when the burglar entered the house.",
-        "Type": 1,
+        "Type": 2,
         "Ambiguities": [
             24
         ],
         "Variants": [
-            "conscious",
-            "conscious",
-            "consciousing",
-            "conscioused"
+            "conscious"
         ],
         "Id": 25
     },
@@ -761,7 +747,8 @@
             "throw",
             "throws",
             "throwing",
-            "threw"
+            "threw",
+            "thrown"
         ],
         "Id": 62
     },
