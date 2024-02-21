@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         self.ambiguousWords = ambiguousWords
         self.textEdit = None
         self.uploadButton = None
-        self.setWindowTitle("Text Input Window")
+        self.setWindowTitle("New Text")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Increase the window size
         self.centerWindow()

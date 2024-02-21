@@ -6,6 +6,8 @@ FONT_SIZE = 14
 SELECTED_COLOR = "#f96d00"
 UNSELECTED_COLOR = "#000000"
 BACKGROUND_COLOR = "#faebcd"
+APP_NAME = "ConfuCheck"
+APP_VERSION = "1.0.0"
 
 def formatTextAsHTML(text):
     #font_stack = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', sans-serif"

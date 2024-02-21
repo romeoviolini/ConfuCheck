@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QPush
                              QTreeWidget, QTreeWidgetItem, QScrollArea, QFileDialog, QMessageBox)
 from PyQt5.QtCore import Qt, QTimer, QPoint
 from data_model import AmbiguousWord, find_ambiguous_word_by_id
-from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR
+from settings import WINDOW_WIDTH, WINDOW_HEIGHT, formatTextAsHTML, SELECTED_COLOR, UNSELECTED_COLOR, BACKGROUND_COLOR, \
+    APP_NAME, APP_VERSION
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from typing import List
 
@@ -21,7 +22,7 @@ class DocumentWindow(QWidget):
         # List to keep track of all tree items
         self.treeItems = []
         self.currentOptionArrayIndex = -1
-        self.setWindowTitle("Document View")
+        self.setWindowTitle(f"{APP_NAME} v.{APP_VERSION}")
         self.initUI()
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)  # Optionally resize the window
         self.centerWindow()
