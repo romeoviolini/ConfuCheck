@@ -1,0 +1,5 @@
+PyQt5==5.15.4
+PyQtWebEngine==5.15.4
+spacy==3.2.1
+python-docx==0.8.11
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
