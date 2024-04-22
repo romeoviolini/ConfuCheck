@@ -164,7 +164,7 @@ class DocumentWindow(QWidget):
         if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
             return
         # Placeholder for back button functionality
-        print("Back button clicked")
+        #print("Back button clicked")
         self.selectNextAmbigousWordByIndex(self.currentIndex - 1)
 
 
@@ -172,7 +172,7 @@ class DocumentWindow(QWidget):
         if not self.ambiguousWordsResults or len(self.ambiguousWordsResults) == 0:
             return
         # Placeholder for next button functionality
-        print("Next button clicked")
+        #print("Next button clicked")
         self.selectNextAmbigousWordByIndex(self.currentIndex + 1)
 
     # Example function to highlight words in HTML
@@ -237,7 +237,7 @@ class DocumentWindow(QWidget):
         if success:
             if len(self.ambiguousWordsResults) > 0:
                 firstAmbiguousPosition = self.getWordPositionByIndex(self.currentIndex)
-                print(f"scroll to {firstAmbiguousPosition}")
+                #print(f"scroll to {firstAmbiguousPosition}")
                 self.scroll_to_word_on_top(firstAmbiguousPosition)
                 self.change_word_color(firstAmbiguousPosition, SELECTED_COLOR, True)
 
@@ -323,13 +323,13 @@ class DocumentWindow(QWidget):
                 self.currentOptionArrayIndex = index
                 treeItem[0].setSelected(True)
                 self.scrollToWidget(treeItem[0].treeWidget())
-                print(f"{treeItem[0].text(column)} option: {treeItem[1]} position: {treeItem[2]}")
+               # print(f"{treeItem[0].text(column)} option: {treeItem[1]} position: {treeItem[2]}")
                 # results.append((match.group(), start, word.Id, False, -1, -1))
                 resultWord = self.ambiguousWordsResults[self.currentIndex]
                 if resultWord[3] == False:
                     count_true = len([item for item in self.ambiguousWordsResults if item[3] == True])
-                    print("Time to count")
-                    print(count_true)
+                   # print("Time to count")
+                    #print(count_true)
                     self.progressLabel.setText(f"confused words checked: {count_true+1}/{len(self.ambiguousWordsResults)}")
                 self.ambiguousWordsResults[self.currentIndex] = (resultWord[0], resultWord[1], resultWord[2], True, treeItem[1], treeItem[2])
                 self.updateCurrentWordOnHTMLText(treeItem[0].text(column))
@@ -376,14 +376,14 @@ class DocumentWindow(QWidget):
 
         for result in self.ambiguousWordsResults:
 
-            print(result)
+            #print(result)
 
             if result[3] != False:
                 ambiguousWord = find_ambiguous_word_by_id(self.ambiguousWords, result[2])
                 correctWord = ambiguousWord.Word
                 if result[4] > 0:
                     ambiguities = ambiguousWord.find_related_ambiguities(self.ambiguousWords)
-                    print(len(ambiguities))
+                    #print(len(ambiguities))
                     currentAmbiguity = ambiguities[result[4]-1]
 
                     if not currentAmbiguity.Variants or len(currentAmbiguity.Variants) == 0:

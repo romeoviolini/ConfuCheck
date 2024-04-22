@@ -14,12 +14,6 @@ json_file_path = 'ambiguous_words.json'
 # Read the JSON file and convert it into a list of AmbiguousWord objects
 ambiguous_words = load_ambiguous_words_from_json(json_file_path)
 
-# test the ambiguities of the word Accept
-ambiguities = ambiguous_words[0].find_related_ambiguities(ambiguous_words)
-
-# should print Except
-print(ambiguities[0].Word)
-
 app = QApplication(sys.argv)
 window = MainWindow(nlp, ambiguous_words)
 window.show()
